@@ -1,0 +1,29 @@
+version: "3"
+services:
+  symfony-service:
+    build: .
+    volumes:
+      - ./:/app:delegated
+      - ./docker/fpm.conf:/usr/local/etc/php-fpm.d/www.conf:delegated
+    environment:
+      LOG_LEVEL: "debug"
+      DEBUG: "true"
+      # configure your IDE with this servername if you wanna use debug
+      PHP_IDE_CONFIG: "serverName=symfony-service"
+      # use 'host.docker.internal' as IP only on MacOS otherwise use CHR as the parameter, which can be set by running
+      # export `CRH=$(ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}')`
+      # XDEBUG_CONFIG: "remote_host=host.docker.internal"
+      XDEBUG_CONFIG: remote_host=${CRH}
+
+  # nginx will serve as PHP FastCGI proxy
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:delegated
+      - ./:/app:delegated
+    ports:
+      - "8080:80"
+    expose:
+      - "80"
+    depends_on:
+      - symfony-service
