@@ -1,5 +1,10 @@
-car-zrt-service
+Dokerized Symfony Application
 =======================
+All the tutorials advice to use Symfony built in web server with ```symfony serve``` command. But there are several problems:
+ - xdebug is not enabled
+ - conflicts may occur if there are more then one PHP application is running
+
+So I created simple skeleton application, which should good start for starting developing any Symfony 5 application from scratch.
 
 ### xdebug
 Before build, run the command below:
@@ -16,7 +21,6 @@ It will set CRH with the docker container IP. CRH is used as xdebug.remote_host 
 ### docker
 To start containers:
 ```$bash
-docker build -t car-zrt-service/php:base --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f docker/php/Dockerfile.base docker/php
 docker-compose build
 docker-compose up -d
 ```
@@ -29,15 +33,4 @@ docker-compose down
 To see docker containers:
 ```$xslt
 docker-compose ps
-```
-
-### Endpoint
-For dev environment add the following to your `/etc/hosts` file:
-```$xslt
-127.0.0.1       car-zrt-service.wkda.develop www.car-zrt-service.wkda.develop
-```
-
-Then you will be able to see the endpoint in:
-```$xslt
-http://car-zrt-service.wkda.develop
 ```
